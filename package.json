@@ -1,7 +1,8 @@
 {
-  "name": "node-xml-lite",
-  "version": "0.0.7",
+  "name": "node-xml-lite2",
+  "version": "0.1.0",
   "description": "Pure javascript XML ANSI/Unicode SAX parser for Node.js",
+  "types": "./index.d.ts",
   "keywords": [
     "xml",
     "sax",
@@ -10,15 +11,21 @@
   "dependencies": {
     "iconv-lite": ">=0.2.0"
   },
-  "homepage": "http://github.com/hgourvest/node-xml-lite",
+  "homepage": "http://github.com/declspec/node-xml-lite",
   "repository": {
     "type": "git",
-    "url": "git://github.com/hgourvest/node-xml-lite"
+    "url": "https://github.com/declspec/node-xml-lite"
   },
   "author": {
     "name": "Henri Gourvest",
     "email": "hgourvest@progdigy.com",
     "url": "http://github.com/hgourvest"
   },
+  "contributors": [
+    {
+      "name": "Jason Larke",
+      "url": "https://github.com/declspec"
+    }
+  ],
   "main": "./index.js"
 }

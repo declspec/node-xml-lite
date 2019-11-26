@@ -4,9 +4,6 @@ var
     iconv; // loaded if necessary
 
 const
-    BUFFER_LENGTH = 1024;
-
-const
     xsBOMUTF8 = -1,
     xsStart = 0,
     xsEatSpaces = 1,
@@ -56,49 +53,49 @@ const
     xtComment = exports.xtComment = 5;
 
 const
-    CHAR_TAB    = 9,
-    CHAR_LF     = 10,
-    CHAR_CR     = 13,
-    CHAR_SP     = 32,
-    CHAR_EXCL   = 33, // !
-    CHAR_DBLQ   = 34, // "
-    CHAR_SHRP   = 35, // #
-    CHAR_AMPE   = 38, // &
-    CHAR_SINQ   = 39, // '
-    CHAR_MINU   = 45, // -
-    CHAR_PT     = 46, // .
-    CHAR_SLAH   = 47, // /
-    CHAR_ZERO   = 48, // 0
-    CHAR_NINE   = 57, // 9
-    CHAR_COLO   = 58, // :
-    CHAR_SCOL   = 59, // ;
-    CHAR_LESS   = 60, // <
-    CHAR_EQUA   = 61, // =
-    CHAR_GREA   = 62, // >
-    CHAR_QUES   = 63, // ?
-    CHAR_A      = 65,
-    CHAR_C      = 67,
-    CHAR_D      = 68,
-    CHAR_F      = 70,
-    CHAR_T      = 84,
-    CHAR_Z      = 90,
-    CHAR_LEBR   = 91, // [
-    CHAR_RIBR   = 93, // [
-    CHAR_LL     = 95, // _
-    CHAR_a      = 97,
-    CHAR_f      = 102,
-    CHAR_g      = 103,
-    CHAR_l      = 108,
-    CHAR_m      = 109,
-    CHAR_o      = 111,
-    CHAR_p      = 112,
-    CHAR_q      = 113,
-    CHAR_s      = 115,
-    CHAR_t      = 116,
-    CHAR_u      = 117,
-    CHAR_x      = 120,
-    CHAR_z      = 122,
-    CHAR_HIGH   = 161;
+    CHAR_TAB = 9,
+    CHAR_LF = 10,
+    CHAR_CR = 13,
+    CHAR_SP = 32,
+    CHAR_EXCL = 33, // !
+    CHAR_DBLQ = 34, // "
+    CHAR_SHRP = 35, // #
+    CHAR_AMPE = 38, // &
+    CHAR_SINQ = 39, // '
+    CHAR_MINU = 45, // -
+    CHAR_PT = 46, // .
+    CHAR_SLAH = 47, // /
+    CHAR_ZERO = 48, // 0
+    CHAR_NINE = 57, // 9
+    CHAR_COLO = 58, // :
+    CHAR_SCOL = 59, // ;
+    CHAR_LESS = 60, // <
+    CHAR_EQUA = 61, // =
+    CHAR_GREA = 62, // >
+    CHAR_QUES = 63, // ?
+    CHAR_A = 65,
+    CHAR_C = 67,
+    CHAR_D = 68,
+    CHAR_F = 70,
+    CHAR_T = 84,
+    CHAR_Z = 90,
+    CHAR_LEBR = 91, // [
+    CHAR_RIBR = 93, // [
+    CHAR_LL = 95, // _
+    CHAR_a = 97,
+    CHAR_f = 102,
+    CHAR_g = 103,
+    CHAR_l = 108,
+    CHAR_m = 109,
+    CHAR_o = 111,
+    CHAR_p = 112,
+    CHAR_q = 113,
+    CHAR_s = 115,
+    CHAR_t = 116,
+    CHAR_u = 117,
+    CHAR_x = 120,
+    CHAR_z = 122,
+    CHAR_HIGH = 161;
 
 const
     STR_ENCODING = 'encoding',
@@ -110,8 +107,8 @@ function isSpace(v) {
 
 function isAlpha(v) {
     return (v >= CHAR_A && v <= CHAR_Z) ||
-    (v >= CHAR_a && v <= CHAR_z) ||
-    (v == CHAR_LL) || (v == CHAR_COLO) || (v >= CHAR_HIGH)
+        (v >= CHAR_a && v <= CHAR_z) ||
+        (v == CHAR_LL) || (v == CHAR_COLO) || (v >= CHAR_HIGH)
 }
 
 function isNum(v) {
@@ -139,14 +136,14 @@ function hexDigit(v) {
 // ------------------------------
 
 const
-   STRING_BUFFER_SIZE = 32;
+    STRING_BUFFER_SIZE = 32;
 
 function StringBuffer() {
     this.buffer = new Buffer(STRING_BUFFER_SIZE);
     this.pos = 0;
 }
 
-StringBuffer.prototype.append = function(value) {
+StringBuffer.prototype.append = function (value) {
     if (this.pos == this.buffer.length) {
         var buf = new Buffer(this.buffer.length * 2);
         this.buffer.copy(buf);
@@ -156,7 +153,7 @@ StringBuffer.prototype.append = function(value) {
     this.pos++;
 };
 
-StringBuffer.prototype.appendBuffer = function(value) {
+StringBuffer.prototype.appendBuffer = function (value) {
     if (value.length) {
         var len = this.buffer.length;
         while (len - this.pos < value.length) {
@@ -172,7 +169,7 @@ StringBuffer.prototype.appendBuffer = function(value) {
     }
 };
 
-StringBuffer.prototype.toString = function(encoding) {
+StringBuffer.prototype.toString = function (encoding) {
     if (!encoding) {
         return this.buffer.slice(0, this.pos).toString()
     }
@@ -182,15 +179,16 @@ StringBuffer.prototype.toString = function(encoding) {
     return iconv.decode(this.buffer.slice(0, this.pos), encoding);
 };
 
-StringBuffer.prototype.toBuffer = function() {
+StringBuffer.prototype.toBuffer = function () {
     var ret = new Buffer(this.pos);
     this.buffer.copy(ret);
     return ret;
 };
 
 // ------------------------------
+exports.XmlParser = XmlParser;
 
-function XMLParser() {
+function XmlParser() {
     this.stackUp();
     this.stack.state = xsBOMUTF8;
     this.stack.position = 0;
@@ -198,9 +196,10 @@ function XMLParser() {
     this.value = new StringBuffer();
     this.line = 0;
     this.col = 0;
+    this.offset = 0;
 }
 
-XMLParser.prototype.stackUp = function() {
+XmlParser.prototype.stackUp = function () {
     var st = {};
     st.state = xsEatSpaces;
     st.savedstate = xsStart;
@@ -211,7 +210,7 @@ XMLParser.prototype.stackUp = function() {
     this.stack = st;
 };
 
-XMLParser.prototype.stackDown = function() {
+XmlParser.prototype.stackDown = function () {
     if (this.stack) {
         this.stack = this.stack.prev;
         if (this.stack) {
@@ -220,7 +219,7 @@ XMLParser.prototype.stackDown = function() {
     }
 };
 
-XMLParser.prototype.parseBuffer = function(buffer, len, event) {
+XmlParser.prototype.parseBuffer = function (buffer, len, event) {
     var i = 0;
     var c = buffer[i];
     while (true) {
@@ -228,16 +227,16 @@ XMLParser.prototype.parseBuffer = function(buffer, len, event) {
             case xsBOMUTF8:
                 switch (this.stack.position) {
                     case 0: if (c != 0xEF) {
-                                this.stack.state = xsEatSpaces;
-                                continue;
-                            }
-                            break;
+                        this.stack.state = xsEatSpaces;
+                        continue;
+                    }
+                        break;
                     case 1: if (c != 0xBB) return false;
-                            break;
+                        break;
                     case 2: if (c != 0xBF) return false;
-                            this.encoding = "utf-8";
-                            this.stack.state = xsEatSpaces;
-                            break;
+                        this.encoding = "utf-8";
+                        this.stack.state = xsEatSpaces;
+                        break;
                 }
                 this.stack.position++;
                 break;
@@ -255,32 +254,32 @@ XMLParser.prototype.parseBuffer = function(buffer, len, event) {
                     return false;
                 }
             case xsElement:
-               switch (c) {
-                   case CHAR_QUES:
-                       this.stack.savedstate = xsStart;
-                       this.stack.state = xsEatSpaces;
-                       this.stackUp();
-                       this.str.pos = 0;
-                       this.stack.state = xsElementPI;
-                       this.stack.clazz = xcProcessInst;
-                       break;
-                   case CHAR_EXCL:
-                       this.position = 0;
-                       this.stack.savedstate = xsStart;
-                       this.stack.state = xsElementComment;
-                       this.stack.clazz = xcComment;
-                       break;
-                   default:
-                       if (isAlpha(c)) {
+                switch (c) {
+                    case CHAR_QUES:
+                        this.stack.savedstate = xsStart;
+                        this.stack.state = xsEatSpaces;
+                        this.stackUp();
+                        this.str.pos = 0;
+                        this.stack.state = xsElementPI;
+                        this.stack.clazz = xcProcessInst;
+                        break;
+                    case CHAR_EXCL:
+                        this.position = 0;
+                        this.stack.savedstate = xsStart;
+                        this.stack.state = xsElementComment;
+                        this.stack.clazz = xcComment;
+                        break;
+                    default:
+                        if (isAlpha(c)) {
                             this.str.pos = 0;
                             this.stack.state = xsElementName;
                             this.stack.clazz = xcElement;
                             continue;
-                       } else {
-                           return false;
-                       }
-               }
-               break;
+                        } else {
+                            return false;
+                        }
+                }
+                break;
             case xsElementPI:
                 if (isAlphaNum(c)) {
                     this.str.append(c);
@@ -439,7 +438,7 @@ XMLParser.prototype.parseBuffer = function(buffer, len, event) {
                     if (c == this.quote) {
                         if (this.stack.clazz != xcProcessInst) {
                             event(xtAttribute, this.str.toString(), this.value.toString(this.encoding));
-                        }  else if (this.str == STR_ENCODING) {
+                        } else if (this.str == STR_ENCODING) {
                             this.encoding = this.value.toString();
                         }
 
@@ -457,12 +456,12 @@ XMLParser.prototype.parseBuffer = function(buffer, len, event) {
                         }
                     }
                 } else {
-                   if (c == CHAR_SINQ || c == CHAR_DBLQ) {
-                       this.quote = c;
-                       this.position++;
-                   } else {
-                       return false;
-                   }
+                    if (c == CHAR_SINQ || c == CHAR_DBLQ) {
+                        this.quote = c;
+                        this.position++;
+                    } else {
+                        return false;
+                    }
                 }
                 break;
             case xsElementString:
@@ -548,7 +547,7 @@ XMLParser.prototype.parseBuffer = function(buffer, len, event) {
             case xsDoctype:
                 // todo: parse elements ...
                 if (c == CHAR_GREA) {
-                    
+
                     if (this.stack.prev) {
                         this.stack.state = xsChildNodes
                     } else {
@@ -835,7 +834,9 @@ XMLParser.prototype.parseBuffer = function(buffer, len, event) {
             default:
                 return false;
         }
+        this.offset++;
         i++;
+
         if (i >= len) break;
         c = buffer[i];
         if (c !== CHAR_LF) {
@@ -847,143 +848,56 @@ XMLParser.prototype.parseBuffer = function(buffer, len, event) {
     }
 };
 
-XMLParser.prototype.parseString = function(str, event) {
+XmlParser.prototype.parseString = function (str, event) {
     var buf = new Buffer(str);
     this.parseBuffer(buf, buf.length, event);
-};
-
-// ------------------------------
-
-var SAXParseFile = exports.SAXParseFile = function(path, event, callback) {
-    fs.open(path, 'r', function(err, fd) {
-        var buffer = new Buffer(BUFFER_LENGTH);
-        var parser = new XMLParser();
-        if (!err) {
-            function cb(err, br) {
-                if (!err) {
-                    if (br > 0) {
-                        var ret = parser.parseBuffer(buffer, br, event);
-                        if (ret === undefined){
-                            fs.read(fd, buffer, 0, BUFFER_LENGTH, null, cb);
-                        } else if (ret === true) {
-                            if (callback) {
-                                callback()
-                            }
-                        } else if (ret === false) {
-                            if (callback) {
-                                callback("parsing error at line: " + parser.line + ", col: " + parser.col)
-                            }
-                        }
-                    } else {
-                        fs.close(fd);
-                    }
-                } else {
-                    fs.close(fd);
-                    if (callback)
-                        callback(err);
-                }
-            }
-            fs.read(fd, buffer, 0, BUFFER_LENGTH, null, cb);
-        } else {
-            if (callback)
-                callback(err);
-        }
-    });
-};
-
-var SAXParseFileSync = exports.SAXParseFileSync = function(path, event) {
-    var fd = fs.openSync(path, 'r');
-    try {
-        var buffer = new Buffer(BUFFER_LENGTH);
-        var parser = new XMLParser();
-        var br = fs.readSync(fd, buffer, 0, BUFFER_LENGTH);
-        while (br > 0) {
-            var ret = parser.parseBuffer(buffer, br, event);
-            if (ret === undefined){
-                br = fs.readSync(fd, buffer, 0, BUFFER_LENGTH);
-            } else if (ret === true) {
-                return
-            } else if (ret === false) {
-                throw new Error("parsing error at line: " + parser.line + ", col: " + parser.col)
-            }
-        }
-    } finally {
-        fs.closeSync(fd);
-    }
 };
 
 function processEvent(stack, state, p1, p2) {
     var node, parent;
     switch (state) {
         case xtOpen:
-            node = {name: p1};
+            node = { name: p1 };
             stack.push(node);
             break;
         case xtClose:
             node = stack.pop();
             if (stack.length) {
-                parent = stack[stack.length-1];
-                if (parent.childs) {
-                    parent.childs.push(node)
+                parent = stack[stack.length - 1];
+                if (parent.children) {
+                    parent.children.push(node)
                 } else {
-                    parent.childs = [node];
+                    parent.children = [node];
                 }
             }
             break;
         case xtAttribute:
-            parent = stack[stack.length-1];
-            if (!parent.attrib) {
-                parent.attrib = {};
+            parent = stack[stack.length - 1];
+            if (!parent.attrs) {
+                parent.attrs = {};
             }
-            parent.attrib[p1] = p2;
+            parent.attrs[p1] = p2;
             break;
         case xtText:
         case xtCData:
-            parent = stack[stack.length-1];
-            if (parent.childs) {
-                parent.childs.push(p1)
+            parent = stack[stack.length - 1];
+            if (parent.children) {
+                parent.children.push(p1)
             } else {
-                parent.childs = [p1];
+                parent.children = [p1];
             }
             break;
     }
     return node;
 }
 
-exports.parseFile = function(path, callback) {
-    var stack = [], node;
-    SAXParseFile(path,
-        function(state, p1, p2) {
-            node = processEvent(stack, state, p1, p2);
-            return true;
-        },
-        function(err){
-            if (callback) {
-                callback(err, node);
-            }
-        }
-    );
-};
-
-exports.parseFileSync = function(path) {
-    var stack = [];
-    var node = null;
-    SAXParseFileSync(path,
-        function(state, p1, p2) {
-            node = processEvent(stack, state, p1, p2);
-            return true;
-        }
-    );
-    return node;
-};
-
-var parseBuffer = exports.parseBuffer = function(buffer) {
+var parseBuffer = exports.parseBuffer = function (buffer) {
     var node = null,
-        parser = new XMLParser(),
+        parser = new XmlParser(),
         stack = [];
 
     var ret = parser.parseBuffer(buffer, buffer.length,
-        function(state, p1, p2) {
+        function (state, p1, p2) {
             node = processEvent(stack, state, p1, p2);
             return true;
         }
@@ -994,6 +908,19 @@ var parseBuffer = exports.parseBuffer = function(buffer) {
     return node;
 };
 
-exports.parseString = function(str) {
-   return parseBuffer(new Buffer(str));
+exports.parseString = function (str) {
+    return parseBuffer(new Buffer(str));
+};
+
+exports.parseFile = function(path, callback) {
+    fs.readFile(path, function (err, data) {
+        if (err != null)
+            return callback(err);
+        callback(undefined, parseBuffer(data));
+    });
+};
+
+exports.parseFileSync = function(path) {
+    var data = fs.readFileSync(path);
+    return parseBuffer(data);
 };
