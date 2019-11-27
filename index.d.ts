@@ -35,6 +35,6 @@ export class XmlParser {
 
 export function parseBuffer(buffer: Buffer): XmlNode;
 export function parseString(string: string): XmlNode;
-export function parseFile(path: string, callback: (err?: Error | null, root?: XmlNode) => void);
+export function parseFile(path: string, callback: (err?: Error | null, root?: XmlNode) => void): void;
 export function parseFileSync(path: string): XmlNode;
 
