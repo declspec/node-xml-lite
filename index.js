@@ -632,6 +632,10 @@ XmlParser.prototype.parseBuffer = function (buffer, len, event) {
                             case CHAR_RIBR:
                                 this.value.append(c);
                                 break;
+                            default:	
+                                this.value.append(c);	
+                                this.position = 6;	
+                                this.stack.state = xsElementCDATA;
                         }
                         break;
                     default:
